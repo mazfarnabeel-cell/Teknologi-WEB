@@ -3,44 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home - Portfolio</title>
+    <title>To-Do List - Tugas 06</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<!-- HEADER -->
-<header>
-    <h1>My Portfolio</h1>
-    <nav>
-        <a href="index.html">Home</a>
-        <a href="profile.html">Profile</a>
-        <a href="projects.html">Projects</a>
-    </nav>
-</header>
+    <div class="container">
+        <h1>To-Do List Nabel</h1>
 
-<!-- HERO / HOME -->
-<section class="hero">
+        <input type="text" id="searchTask" placeholder="Cari tugas...">
 
-    <!-- FOTO BULAT -->
-    <img src="foto Nabeel.png" alt="Foto Profile" class="profile-img">
+        <div class="input-group">
+            <input type="text" id="taskInput" placeholder="Tambah tugas baru...">
+            <button id="addTaskBtn">Tambah</button>
+        </div>
 
-    <h2>Halo, Saya Azfar</h2>
-    <p>Mahasiswa Sistem Informasi</p>
+        <ul id="taskList">
+            </ul>
+    </div>
 
-    <a href="profile.html" class="btn">Lihat Profile</a>
+    <script>
+        const taskInput = document.getElementById('taskInput');
+        const addTaskBtn = document.getElementById('addTaskBtn');
+        const taskList = document.getElementById('taskList');
+        const searchTask = document.getElementById('searchTask');
 
-</section>
+        // Fungsi Tambah Tugas
+        addTaskBtn.addEventListener('click', () => {
+            const taskText = taskInput.value.trim();
+            if (taskText !== "") {
+                createTaskElement(taskText);
+                taskInput.value = "";
+            }
+        });
 
-<!-- ABOUT SINGKAT -->
-<section class="about">
-    <h2>Tentang Saya</h2>
-    <p>Saya adalah mahasiswa yang tertarik pada pengembangan web dan teknologi informasi.</p>
-</section>
+        // Fungsi Buat Element List
+        function createTaskElement(text) {
+            const li = document.createElement('li');
+            li.innerHTML = `
+                <span class="task-text">${text}</span>
+                <div class="btn-group">
+                    <button class="edit-btn">Edit</button>
+                    <button class="delete-btn">Hapus</button>
+                </div>
+            `;
 
-<!-- FOOTER -->
-<footer>
-    <p>© 2026 Portfolio | Azfar</p>
-</footer>
+            // Fitur Edit Tugas [cite: 7]
+            const editBtn = li.querySelector('.edit-btn');
+            editBtn.addEventListener('click', () => {
+                const span = li.querySelector('.task-text');
+                const newText = prompt("Edit tugas kamu:", span.innerText);
+                if (newText !== null && newText.trim() !== "") {
+                    span.innerText = newText;
+                }
+            });
 
+            // Fitur Hapus
+            const deleteBtn = li.querySelector('.delete-btn');
+            deleteBtn.addEventListener('click', () => {
+                li.remove();
+            });
+
+            taskList.appendChild(li);
+        }
+
+        // Fitur Search/Filter [cite: 7]
+        searchTask.addEventListener('input', (e) => {
+            const filter = e.target.value.toLowerCase();
+            const tasks = taskList.getElementsByTagName('li');
+
+            Array.from(tasks).forEach(task => {
+                const text = task.querySelector('.task-text').innerText.toLowerCase();
+                if (text.includes(filter)) {
+                    task.style.display = "flex";
+                } else {
+                    task.style.display = "none";
+                }
+            });
+        });
+    </script>
 </body>
 </html>
